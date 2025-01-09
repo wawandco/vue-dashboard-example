@@ -1,9 +1,7 @@
-<script>
-import useLayoutMixin from '@/layout/mixins/layout';
+<script setup>
+import { useLayout } from '@/layout/composables/layout';
 
-export default {
-    mixins: [useLayoutMixin]
-};
+const { toggleDarkMode, isDarkTheme, updateColors } = useLayout();
 </script>
 
 <template>
@@ -11,6 +9,7 @@ export default {
         <Button type="button" @click="toggleDarkMode" rounded :icon="isDarkTheme ? 'pi pi-moon' : 'pi pi-sun'" severity="secondary" />
         <div class="relative">
             <Button
+                @click.prevent="updateColors"
                 icon="pi pi-palette"
                 v-styleclass="{ selector: '@next', enterFromClass: 'hidden', enterActiveClass: 'animate-scalein', leaveToClass: 'hidden', leaveActiveClass: 'animate-fadeout', hideOnOutsideClick: true }"
                 type="button"
