@@ -1,77 +1,54 @@
-<script>
-import useLayoutMixin from '@/layout/mixins/layout';
-import useChartMixin from '@/views/mixins/chart';
+<script setup>
 import { Skeleton } from 'primevue';
+import { computed, onMounted, ref, watch } from 'vue';
+import { useLayout } from '@/layout/composables/layout';
+import { useChart } from '@/views/composables/chart';
 
-export default {
-    components: { Skeleton },
-    mixins: [useLayoutMixin, useChartMixin],
+onMounted(() => fetchData());
 
-    props: {
-        title: {
-            type: String,
-            default: 'Revenue Stream'
-        }
-    },
+const { title = 'Revenue Stream' } = defineProps({
+    title: String
+});
 
-    data() {
-        return {
-            loading: false,
-            error: null,
-            totalRevenue: null
-        };
-    },
+const loading = ref(false);
+const error = ref(null);
+const totalRevenue = ref(null);
 
-    computed: {
-        source() {
-            return [this.getPrimary, this.isDarkTheme];
-        },
-        formattedTotalRevenue() {
-            return `$${this.totalRevenue.toLocaleString()}`;
-        }
-    },
+const chartData = ref(null);
+const chartOptions = ref(null);
 
-    methods: {
-        async fetchData() {
-            try {
-                this.loading = true;
-                this.error = null;
+const formattedTotalRevenue = computed(() => `$${totalRevenue.value.toLocaleString()}`);
 
-                await new Promise((resolve) => setTimeout(resolve, 1000));
+const { getPrimary, isDarkTheme } = useLayout();
+const { setChartOptions, setChartData, calculateTotalRevenue } = useChart();
 
-                this.chartData = this.setChartData();
-                this.chartOptions = this.setChartOptions();
+async function fetchData() {
+    try {
+        loading.value = true;
+        error.value = null;
 
-                this.calculateTotalRevenue();
-            } catch (err) {
-                this.error = 'Failed to load chart data.';
-            } finally {
-                this.loading = false;
-            }
-        },
+        await new Promise((resolve) => setTimeout(resolve, 1000));
 
-        refreshChartData() {
-            this.fetchData();
-        }
-    },
+        chartData.value = setChartData();
+        chartOptions.value = setChartOptions();
+        const datasets = chartData.value?.datasets || [];
 
-    mounted() {
-        this.fetchData();
-    },
-
-    watch: {
-        source(newSource, oldSource) {
-            this.fetchData();
-        }
+        totalRevenue.value = calculateTotalRevenue(datasets);
+    } catch (err) {
+        error.value = 'Failed to load chart data.';
+    } finally {
+        loading.value = false;
     }
-};
+}
+
+watch([getPrimary, isDarkTheme], () => fetchData());
 </script>
 
 <template>
     <div class="card">
         <div class="flex justify-between items-center mb-6">
             <div class="font-semibold text-xl">{{ title }}</div>
-            <button :disabled="loading" @click.prevent="refreshChartData" class="w-12 h-12 flex items-center justify-center bg-blue-100 dark:bg-blue-400/10 rounded-full mr-4 shrink-0">
+            <button :disabled="loading" @click.prevent="fetchData" class="w-12 h-12 flex items-center justify-center bg-blue-100 dark:bg-blue-400/10 rounded-full mr-4 shrink-0">
                 <i class="pi pi-undo !text-xl text-gray-500"></i>
             </button>
         </div>

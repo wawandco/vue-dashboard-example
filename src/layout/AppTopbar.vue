@@ -1,9 +1,7 @@
-<script>
-import useLayoutMixin from '@/layout/mixins/layout';
+<script setup>
+import { useLayout } from '@/layout/composables/layout';
 
-export default {
-    mixins: [useLayoutMixin]
-};
+const { toggleDarkMode, isDarkTheme, updateColors } = useLayout();
 </script>
 
 <template>

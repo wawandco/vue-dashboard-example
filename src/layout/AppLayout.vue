@@ -1,13 +1,6 @@
-<script>
+<script setup>
 import AppFooter from './AppFooter.vue';
 import AppTopbar from './AppTopbar.vue';
-
-export default {
-    components: {
-        AppFooter,
-        AppTopbar
-    }
-};
 </script>
 
 <template>

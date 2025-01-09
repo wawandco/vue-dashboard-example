@@ -15,7 +15,7 @@ export default {
     },
 
     mounted() {
-        ProductService.getProductsSmall().then((data) => (this.products = data));
+        ProductService.getProductsData().then((data) => (this.products = data));
     }
 };
 </script>
