@@ -48,10 +48,6 @@ export default {
             } finally {
                 this.loading = false;
             }
-        },
-
-        refreshChartData() {
-            this.fetchData();
         }
     },
 
@@ -71,7 +67,7 @@ export default {
     <div class="card">
         <div class="flex justify-between items-center mb-6">
             <div class="font-semibold text-xl">{{ title }}</div>
-            <button :disabled="loading" @click.prevent="refreshChartData" class="w-12 h-12 flex items-center justify-center bg-blue-100 dark:bg-blue-400/10 rounded-full mr-4 shrink-0">
+            <button :disabled="loading" @click.prevent="fetchData" class="w-12 h-12 flex items-center justify-center bg-blue-100 dark:bg-blue-400/10 rounded-full mr-4 shrink-0">
                 <i class="pi pi-undo !text-xl text-gray-500"></i>
             </button>
         </div>
