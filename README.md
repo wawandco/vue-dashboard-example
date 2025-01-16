@@ -1,6 +1,6 @@
-# example-project
+# Dashboard App Using Options API
 
-This template should help get you started developing with Vue 3 in Vite.
+This project serves as an exercise to migrate a Vue component from the Options API to the Composition API by following a step-by-step guide.
 
 ## Recommended IDE Setup
 
